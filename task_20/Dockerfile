@@ -1,0 +1,24 @@
+FROM python:3.11-slim
+
+# Установка системных зависимостей
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+# Установка MLflow и зависимостей для PostgreSQL
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
+
+# Создание директории для артефактов
+RUN mkdir -p /mlflow/artifacts
+
+# Открываем порт для MLflow UI
+EXPOSE 5000
+
+# Команда запуска MLflow сервера
+CMD mlflow server \
+    --backend-store-uri postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME} \
+    --default-artifact-root /mlflow/artifacts \
+    --host 0.0.0.0 \
+    --port 5000
