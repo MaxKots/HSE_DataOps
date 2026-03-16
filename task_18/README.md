@@ -22,10 +22,10 @@ make db.psql
 
 ## Скриншоты:
 
-![task_18](https://github.com/MaxKots/HSE_DataOps/task_18/.assets/1.jpg)
+![task_18](https://github.com/MaxKots/HSE_DataOps/tree/main/task_18/.assets/1.jpg)
 
-![task_18](https://github.com/MaxKots/HSE_DataOps/task_18/.assets/2.jpg)
+![task_18](https://github.com/MaxKots/HSE_DataOps/tree/main/task_18/.assets/2.jpg)
 
-![task_18](https://github.com/MaxKots/HSE_DataOps/task_18/.assets/3.jpg)
+![task_18](https://github.com/MaxKots/HSE_DataOps/tree/main/task_18/.assets/3.jpg)
 
 
