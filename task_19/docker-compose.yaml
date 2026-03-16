@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  jupyterhub:
+    build: .
+    container_name: jupyterhub_server
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"  # JupyterHub веб-интерфейс
+    volumes:
+      - jupyterhub_data:/srv/jupyterhub
+      - /var/run/docker.sock:/var/run/docker.sock  # Для запуска пользовательских контейнеров
+      - ./jupyterhub_config.py:/etc/jupyterhub/jupyterhub_config.py:ro
+    environment:
+      JUPYTERHUB_CRYPT_KEY: ${JUPYTERHUB_CRYPT_KEY}
+    command: jupyterhub -f /etc/jupyterhub/jupyterhub_config.py
+
+volumes:
+  jupyterhub_data:
