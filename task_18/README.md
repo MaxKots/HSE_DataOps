@@ -1,4 +1,4 @@
-#Инструкция
+# Инструкция
 
 ## 1. виртуальное окружение и зависимости
 make dev.install
@@ -18,3 +18,14 @@ make db.migrate
 
 ## 6. Проверка результата через psql
 make db.psql
+
+
+## Скриншоты:
+
+![task_18](https://github.com/MaxKots/HSE_DataOps/task_18/.assets/1.jpg)
+
+![task_18](https://github.com/MaxKots/HSE_DataOps/task_18/.assets/2.jpg)
+
+![task_18](https://github.com/MaxKots/HSE_DataOps/task_18/.assets/3.jpg)
+
+
