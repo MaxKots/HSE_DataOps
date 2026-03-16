@@ -14,7 +14,7 @@ docker-compose build mlflow
 ### 3. Запустить MLflow сервер
 docker-compose up -d mlflow
 
-# Посмотреть логи
+### Посмотреть логи
 docker-compose logs -f mlflow
 
 ### 4. Открой http://localhost:5000
