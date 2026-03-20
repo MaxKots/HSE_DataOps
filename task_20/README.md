@@ -43,4 +43,4 @@ docker volume ls | grep mlflow
 
 ## Скриншоты:
 
-![task_18](https://github.com/MaxKots/HSE_DataOps/blob/main/task_19/.assets/1.jpg)
+![task_20](https://github.com/MaxKots/HSE_DataOps/blob/main/task_20/.assets/1.jpg)
