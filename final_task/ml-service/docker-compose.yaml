@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+  ml-service-db:
+    image: postgres:17
+    container_name: ml-service-db
+    environment:
+      POSTGRES_USER: ${ML_DB_USER}
+      POSTGRES_PASSWORD: ${ML_DB_PASSWORD}
+      POSTGRES_DB: ${ML_DB_NAME}
+    volumes:
+      - ml_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${ML_DB_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  ml-service:
+    build:
+      context: .
+    container_name: ml-service
+    depends_on:
+      ml-service-db:
+        condition: service_healthy
+    ports:
+      - "8001:8001"
+    environment:
+      - DATABASE_URL=postgresql://${ML_DB_USER}:${ML_DB_PASSWORD}@ml-service-db:5432/${ML_DB_NAME}
+    env_file:
+      - .env
+
+volumes:
+  ml_db_data:

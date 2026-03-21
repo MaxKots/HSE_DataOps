@@ -13,7 +13,7 @@ RUN pip install --no-cache-dir -r /tmp/requirements.txt
 # Создание директории для артефактов
 RUN mkdir -p /mlflow/artifacts
 
-# порт для MLflow UI
+# Открываем порт для MLflow UI
 EXPOSE 5000
 
 # Команда запуска MLflow сервера
