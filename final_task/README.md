@@ -5,57 +5,7 @@
 ## Структура проекта
 
 
-ml-platform/
-├── docker-compose.yaml          # MLflow + PostgreSQL
-├── .env
-├── mlflow/                       # Этап 1
-│   └── Dockerfile
-├── airflow/                      # Этап 2
-│   ├── docker-compose.yaml
-│   ├── .env
-│   └── dags/
-│       └── example_dag.py
-├── lakefs/                       # Этап 3
-│   ├── docker-compose.yaml
-│   └── .env
-├── jupyterhub/                   # Этап 4
-│   ├── docker-compose.yaml
-│   ├── Dockerfile
-│   ├── .env
-│   └── jupyterhub_config.py
-├── ml-service/                   # Этап 5
-│   ├── docker-compose.yaml
-│   ├── Dockerfile
-│   ├── .env
-│   ├── requirements.txt
-│   ├── app/
-│   │   ├── main.py
-│   │   ├── model.py
-│   │   ├── database.py
-│   │   └── schemas.py
-│   └── migrations/
-│       └── 0001_create_predictions.py
-├── monitoring/                   # Этап 6
-│   ├── docker-compose.yaml
-│   ├── prometheus/
-│   │   └── prometheus.yml
-│   └── grafana/
-│       └── datasources.yml
-├── k8s/                          # Этап 7
-│   ├── deployment.yaml
-│   ├── service.yaml
-│   └── ingress.yaml
-├── helm/                         # Этап 8
-│   └── ml-service/
-│       ├── Chart.yaml
-│       ├── values.yaml
-│       └── templates/
-│           ├── deployment.yaml
-│           ├── service.yaml
-│           └── ingress.yaml
-├── prompts/                      # Этап 9
-│   └── create_prompts.py
-└── README.md
+![final_task](https://github.com/MaxKots/HSE_DataOps/blob/main/final_task/.assets/1.svg)
 
 
 ## Требования
