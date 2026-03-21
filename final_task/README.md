@@ -42,9 +42,9 @@ docker-compose --version
 
 ```bash
 docker-compose up -d
-# Ждём ~30 сек
-# Открываем http://localhost:5000
-# Создаём эксперимент: кнопка \"+\" слева
+# Жди ~30 сек
+# Открывай http://localhost:5000
+# Создай эксперимент: кнопка \"+\" слева
 ```
 
 ### Этап 2. Airflow
@@ -53,8 +53,8 @@ docker-compose up -d
 cd airflow
 docker-compose up -d
 # Первый запуск долгий — init делает миграции и создаёт пользователя
-# Ждём ~1-2 мин
-# Открываем http://localhost:8080
+# Жди ~1-2 мин
+# Открывай http://localhost:8080
 # Логин: admin / admin
 # DAG \"ml_pipeline\" появится в списке
 cd ..
@@ -65,7 +65,7 @@ cd ..
 ```bash
 cd lakefs
 docker-compose up -d
-# Ждём ~30 сек
+# Жди ~30 сек
 
 # 1. MinIO: http://localhost:9001 (minioadmin / minioadmin)
 #    Buckets → Create Bucket → имя: lakefs-data
@@ -85,8 +85,8 @@ cd ..
 ```bash
 cd jupyterhub
 docker-compose up -d --build
-# Ждём ~1 мин (сборка образа)
-# Открываем http://localhost:8888
+# Жди ~1 мин (сборка образа)
+# Открывай http://localhost:8888
 # Логин: admin / admin
 # Запустится JupyterLab
 cd ..
@@ -97,12 +97,12 @@ cd ..
 ```bash
 cd ml-service
 docker-compose up -d --build
-# Ждём ~30 сек
+# Жди ~30 сек
 
-# Проверяем здоровье
+# Проверь здоровье
 curl http://localhost:8001/healthz
 
-# Делаем предсказание
+# Сделай предсказание
 curl -X POST http://localhost:8001/api/v1/predict \\
   -H \"Content-Type: application/json\" \\
   -d '{\"features\": [3.5]}'
@@ -117,7 +117,7 @@ cd ..
 cd monitoring
 docker-compose up -d
 
-# Генерируем нагрузку чтобы появились метрики
+# Сгенери нагрузку чтобы появились метрики
 for i in (seq 1 20); do
   curl -s -X POST http://localhost:8001/api/v1/predict \\
     -H \"Content-Type: application/json\" \\
@@ -171,7 +171,7 @@ pip install mlflow
 export MLFLOW_TRACKING_URI=http://localhost:5000
 python prompts/create_prompts.py
 ```
-# Проверяем в UI: http://localhost:5000 → раздел Prompt Storage
+# Проверь в UI: http://localhost:5000 → раздел Prompt Storage
 
 
 ## Проверка что всё работает
