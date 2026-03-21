@@ -1,0 +1,41 @@
+replicaCount: 2
+
+image:
+  repository: ml-service
+  tag: "1.0.0"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8001
+
+ingress:
+  enabled: true
+  className: nginx
+  host: ml-service.local
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+probes:
+  startup:
+    path: /healthz
+    failureThreshold: 30
+    periodSeconds: 2
+  readiness:
+    path: /readyz
+    initialDelaySeconds: 5
+    periodSeconds: 10
+  liveness:
+    path: /healthz
+    initialDelaySeconds: 10
+    periodSeconds: 30
+
+env:
+  DATABASE_URL: "postgresql://mlsvc:mlsvc_pass@ml-service-db:5432/mlsvc"

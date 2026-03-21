@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  mlflow-db:
+    image: postgres:17
+    container_name: mlflow-db
+    environment:
+      POSTGRES_USER: ${MLFLOW_DB_USER}
+      POSTGRES_PASSWORD: ${MLFLOW_DB_PASSWORD}
+      POSTGRES_DB: ${MLFLOW_DB_NAME}
+    ports:
+      - "5433:5432"
+    volumes:
+      - mlflow_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${MLFLOW_DB_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  mlflow:
+    build:
+      context: ./mlflow
+    container_name: mlflow
+    depends_on:
+      mlflow-db:
+        condition: service_healthy
+    ports:
+      - "5000:5000"
+    environment:
+      - MLFLOW_TRACKING_URI=postgresql://${MLFLOW_DB_USER}:${MLFLOW_DB_PASSWORD}@mlflow-db:5432/${MLFLOW_DB_NAME}
+    volumes:
+      - mlflow_artifacts:/mlartifacts
+
+volumes:
+  mlflow_db_data:
+  mlflow_artifacts:
