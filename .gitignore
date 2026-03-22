@@ -1,0 +1,6 @@
+final_task/k8s/minikube-linux-amd64
+final_task/venv/
+
+# Исключенные большие файлы
+final_task/venv/
+final_task/k8s/minikube-linux-amd64
