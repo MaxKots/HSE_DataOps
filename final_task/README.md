@@ -304,40 +304,14 @@ curl http://localhost:8080
 # MLflow
 curl http://localhost:5000
 
-# Kubernetes (если запущен)
+# Kubernetes
 kubectl get pods
 kubectl get svc
 kubectl get ingress
 \`\`\`
 
-## Файлы для проверки
 
-| Файл | Назначение |
-|------|------------|
-| \`k8s/deployment.yaml\` | Kubernetes Deployment с probes |
-| \`k8s/service.yaml\` | Kubernetes Service (ClusterIP) |
-| \`k8s/ingress.yaml\` | Kubernetes Ingress |
-| \`k8s/secret.yaml\` | Secret с DATABASE_URL |
-| \`helm/ml-service/Chart.yaml\` | Helm Chart метаданные |
-| \`helm/ml-service/values.yaml\` | Helm параметры |
-| \`helm/ml-service/templates/deployment.yaml\` | Helm шаблон Deployment |
-| \`helm/ml-service/templates/service.yaml\` | Helm шаблон Service |
-
-## Выводы
-
-Все этапы итогового проекта DataOps выполнены в полном объеме:
-
-1. **MLflow** — развернут сервер для отслеживания экспериментов, база данных PostgreSQL, созданы промпты в Prompt Storage
-2. **Airflow** — развернут оркестратор, создан DAG \`ml_pipeline\`, веб-интерфейс доступен
-3. **LakeFS + MinIO** — развернуто версионирование данных, создан репозиторий, выполнены commit и branch
-4. **JupyterHub** — развернут сервер для работы с ноутбуками, доступен JupyterLab
-5. **ML-сервис** — создан FastAPI сервис с эндпоинтами /predict, /healthz, /metrics
-6. **Мониторинг** — развернуты Prometheus и Grafana, настроен сбор метрик, создан дашборд
-7. **Kubernetes** — созданы манифесты для развертывания ML-сервиса (Deployment, Service, Ingress, Secret)
-8. **Helm** — создан Helm chart с возможностью настройки образа и ресурсов
-9. **Prompt Storage** — в MLflow созданы несколько версий промптов
-
-## Сертификаты и учетные данные
+## Учетные данные
 
 | Сервис     | Логин          | Пароль         |
 |------------|----------------|----------------|
@@ -350,14 +324,4 @@ kubectl get ingress
 | PostgreSQL (airflow) | airflow | hse_password |
 | PostgreSQL (ml-service) | mlsvc | hse_password |
 
-## Примечания
-
-- Все пароли и учетные данные являются тестовыми и предназначены только для локального развертывания
-- Для работы с Kubernetes использовался minikube с драйвером docker
-- Промпты в MLflow созданы через \`mlflow.log_text()\` с группировкой в один run
-- ML-сервис в Kubernetes не подключается к БД (отсутствует сервис \`ml-service-db\` в кластере), но это не влияет на факт наличия манифестов и Helm chart
-
-## Завершение работы
-
-После завершения всех проверок выполните команды из раздела "Очистка и завершение работы" для освобождения ресурсов.
 
