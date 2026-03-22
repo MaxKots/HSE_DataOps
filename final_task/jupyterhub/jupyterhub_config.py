@@ -1,0 +1,9 @@
+c = get_config()
+
+c.JupyterHub.ip = "0.0.0.0"
+c.JupyterHub.port = 8888
+c.Authenticator.admin_users = {"admin"}
+c.Authenticator.allowed_users = {"admin"}
+c.LocalAuthenticator.create_system_users = False
+c.Spawner.default_url = "/lab"
+c.JupyterHub.bind_url = "http://0.0.0.0:8888"
