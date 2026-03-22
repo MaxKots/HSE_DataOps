@@ -8,6 +8,8 @@
 - Пароль для БД: \`mlflow_password\`, пользователь: \`mlflow\`
 - MLflow доступен по адресу: http://localhost:5000
 
+![final_task](https://github.com/MaxKots/HSE_DataOps/blob/main/final_task/.assets/9.jpg)
+
 ### Этап 2. Airflow
 - Создан docker-compose.yaml с сервисами:
   - \`airflow-db\` (PostgreSQL 17)
@@ -18,6 +20,9 @@
 - Настроен файл \`webserver_config.py\` для отключения CSRF
 - Создан тестовый DAG \`ml_pipeline\` в \`dags/test_dag.py\`
 - Airflow доступен по адресу: http://localhost:8080 (admin/admin)
+
+![final_task](https://github.com/MaxKots/HSE_DataOps/blob/main/final_task/.assets/3.jpg)
+
 
 ### Этап 3. LakeFS + MinIO
 - Создан docker-compose.yaml с сервисами:
@@ -30,11 +35,16 @@
 - Создан репозиторий \`my-data\` с пространством \`s3://lakefs-data/my-data\`
 - Создана ветка \`dev\`, загружен файл \`housing_data.csv\` и выполнен commit
 
+![final_task](https://github.com/MaxKots/HSE_DataOps/blob/main/final_task/.assets/4.jpg)
+![final_task](https://github.com/MaxKots/HSE_DataOps/blob/main/final_task/.assets/10.jpg)
+
 ### Этап 4. JupyterHub
 - Создан Dockerfile на базе \`python:3.14-slim\`
 - Установлены \`jupyterhub\`, \`jupyterlab\`, \`configurable-http-proxy\`
 - Создан \`jupyterhub_config.py\` с настройками аутентификации
 - JupyterHub доступен: http://localhost:8888 (admin/admin)
+
+![final_task](https://github.com/MaxKots/HSE_DataOps/blob/main/final_task/.assets/5.jpg)
 
 ### Этап 5. ML-сервис
 - Создан FastAPI сервис с эндпоинтами:
@@ -50,7 +60,9 @@
     -H "Content-Type: application/json" \\
     -d '{"features": [3.5]}'
   # Ответ: {"prediction":7.065,"model_version":"1.0.0"}
-  \`\`\`
+
+![final_task](https://github.com/MaxKots/HSE_DataOps/blob/main/final_task/.assets/2.jpg)
+![final_task](https://github.com/MaxKots/HSE_DataOps/blob/main/final_task/.assets/6.jpg) \`\`\`
 
 ### Этап 6. Мониторинг (Prometheus + Grafana)
 - Создан docker-compose.yaml для Prometheus и Grafana
@@ -59,7 +71,10 @@
 - Grafana доступна: http://localhost:3000 (admin/admin)
 - Создан дашборд с метриками:
   - \`http_requests_total\`
-  - \`http_request_duration_seconds_bucket\`
+  - \`http_request_duration_seconds_bucket\
+
+![final_task](https://github.com/MaxKots/HSE_DataOps/blob/main/final_task/.assets/7.jpg)
+![final_task](https://github.com/MaxKots/HSE_DataOps/blob/main/final_task/.assets/8.jpg)
 
 ### Этап 7-8. Kubernetes + Helm
 - Созданы манифесты в \`k8s/\`:
@@ -75,6 +90,102 @@
   kubectl get pods
   kubectl get svc
   kubectl get ingress
+
+отчет helm 
+```text
+echo "=== K8S MANIFESTS ===" && ls -la ~/HSE_DataOps/final_task/k8s/ && \
+echo "=== DEPLOYMENT ===" && head -30 ~/HSE_DataOps/final_task/k8s/deployment.yaml && \
+echo "=== HELM CHART ===" && ls -la ~/HSE_DataOps/final_task/helm/ml-service/ && \
+echo "=== HELM VALUES ===" && cat ~/HSE_DataOps/final_task/helm/ml-service/values.yaml
+=== K8S MANIFESTS ===
+итого 24
+drwxrwxr-x  2 max max 4096 мар 22 05:15 .
+drwxrwxr-x 12 max max 4096 мар 22 05:22 ..
+-rw-rw-r--  1 max max 1211 мар 22 01:06 deployment.yaml
+-rw-rw-r--  1 max max  422 мар 22 01:06 ingress.yaml
+-rw-rw-r--  1 max max  165 мар 22 04:47 secret.yaml
+-rw-rw-r--  1 max max  180 мар 22 01:06 service.yaml
+=== DEPLOYMENT ===
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ml-service
+  labels:
+    app: ml-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ml-service
+  template:
+    metadata:
+      labels:
+        app: ml-service
+    spec:
+      containers:
+        - name: ml-service
+          image: ml-service:1.0.0
+          ports:
+            - containerPort: 8001
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: ml-service-secrets
+                  key: database-url
+          startupProbe:
+            httpGet:
+              path: /healthz
+=== HELM CHART ===
+итого 20
+drwxrwxr-x 3 max max 4096 мар 22 01:06 .
+drwxrwxr-x 3 max max 4096 мар 22 01:06 ..
+-rw-rw-r-- 1 max max  134 мар 22 01:06 Chart.yaml
+drwxrwxr-x 2 max max 4096 мар 22 01:06 templates
+-rw-rw-r-- 1 max max  641 мар 22 01:06 values.yaml
+=== HELM VALUES ===
+replicaCount: 2
+
+image:
+  repository: ml-service
+  tag: "1.0.0"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8001
+
+ingress:
+  enabled: true
+  className: nginx
+  host: ml-service.local
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+probes:
+  startup:
+    path: /healthz
+    failureThreshold: 30
+    periodSeconds: 2
+  readiness:
+    path: /readyz
+    initialDelaySeconds: 5
+    periodSeconds: 10
+  liveness:
+    path: /healthz
+    initialDelaySeconds: 10
+    periodSeconds: 30
+
+env:
+  DATABASE_URL: "postgresql://mlsvc:mlsvc_pass@ml-service-db:5432/mlsvc"
+```
   \`\`\`
 
 ### Этап 9. Prompt Storage MLflow
@@ -85,56 +196,12 @@
   - v3: "You are a senior ML engineer. Explain: {question}"
 - Промпты сохранены в MLflow Prompt Storage
 
+![final_task](https://github.com/MaxKots/HSE_DataOps/blob/main/final_task/.assets/9.jpg)
+
 ## Структура проекта
 
-\`\`\`
-final_task/
-├── mlflow/
-│   ├── Dockerfile
-│   ├── docker-compose.yaml
-│   └── .env
-├── airflow/
-│   ├── docker-compose.yaml
-│   ├── .env
-│   ├── webserver_config.py
-│   └── dags/
-│       └── test_dag.py
-├── lakefs/
-│   ├── docker-compose.yaml
-│   └── .env
-├── jupyterhub/
-│   ├── Dockerfile
-│   ├── docker-compose.yaml
-│   ├── jupyterhub_config.py
-│   └── .env
-├── ml-service/
-│   ├── Dockerfile
-│   ├── docker-compose.yaml
-│   ├── requirements.txt
-│   ├── .env
-│   └── app/
-│       └── main.py
-├── monitoring/
-│   ├── docker-compose.yaml
-│   ├── prometheus/
-│   │   └── prometheus.yml
-│   └── grafana/
-│       └── datasources.yml
-├── k8s/
-│   ├── deployment.yaml
-│   ├── service.yaml
-│   ├── ingress.yaml
-│   └── secret.yaml
-├── helm/
-│   └── ml-service/
-│       ├── Chart.yaml
-│       ├── values.yaml
-│       └── templates/
-│           ├── deployment.yaml
-│           └── service.yaml
-└── prompts/
-    └── create_prompts.py
-\`\`\`
+![final_task](https://github.com/MaxKots/HSE_DataOps/blob/main/final_task/.assets/0.svg)
+
 
 ## Порты сервисов
 
