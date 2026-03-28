@@ -5,22 +5,22 @@
 ## Выполненные этапы
 
 ### Этап 1. MLflow
-- Создан Dockerfile на базе \`python:3.11-slim\` с установкой MLflow и зависимостей
-- Настроен docker-compose.yaml с сервисами \`mlflow\` и \`mlflow-db\` (PostgreSQL)
-- Пароль для БД: \`mlflow_password\`, пользователь: \`mlflow\`
+- Создан Dockerfile на базе python:3.11-slim с установкой MLflow и зависимостей
+- Настроен docker-compose.yaml с сервисами mlflow и mlflow-db (PostgreSQL)
+- Пароль для БД: mlflow_password, пользователь: mlflow
 - MLflow доступен по адресу: http://localhost:5000
 
 ![final_task](https://github.com/MaxKots/HSE_DataOps/blob/main/final_task/.assets/9.jpg)
 
 ### Этап 2. Airflow
 - Создан docker-compose.yaml с сервисами:
-  - \`airflow-db\` (PostgreSQL 17)
-  - \`airflow-init\` (создание пользователя admin/admin)
-  - \`airflow-webserver\` (порт 8080)
-  - \`airflow-scheduler\`
-  - \`airflow-triggerer\`
-- Настроен файл \`webserver_config.py\` для отключения CSRF
-- Создан тестовый DAG \`ml_pipeline\` в \`dags/test_dag.py\`
+  - airflow-db (PostgreSQL 17)
+  - airflow-init (создание пользователя admin/admin)
+  - airflow-webserver (порт 8080)
+  - airflow-scheduler
+  - airflow-triggerer
+- Настроен файл webserver_config.py для отключения CSRF
+- Создан тестовый DAG ml_pipeline в dags/test_dag.py
 - Airflow доступен по адресу: http://localhost:8080 (admin/admin)
 
 ![final_task](https://github.com/MaxKots/HSE_DataOps/blob/main/final_task/.assets/3.jpg)
@@ -28,43 +28,43 @@
 
 ### Этап 3. LakeFS + MinIO
 - Создан docker-compose.yaml с сервисами:
-  - \`lakefs-db\` (PostgreSQL)
-  - \`minio\` (S3-совместимое хранилище)
-  - \`lakefs\` (сервер версионирования данных)
+  - lakefs-db (PostgreSQL)
+  - minio (S3-совместимое хранилище)
+  - lakefs (сервер версионирования данных)
 - MinIO доступен: http://localhost:9001 (minioadmin/minioadmin)
-- Создан bucket: \`lakefs-data\`
+- Создан bucket: lakefs-data
 - LakeFS доступен: http://localhost:8000
-- Создан репозиторий \`my-data\` с пространством \`s3://lakefs-data/my-data\`
-- Создана ветка \`dev\`, загружен файл \`housing_data.csv\` и выполнен commit
+- Создан репозиторий my-data с пространством s3://lakefs-data/my-data
+- Создана ветка dev, загружен файл housing_data.csv и выполнен commit
 
 ![final_task](https://github.com/MaxKots/HSE_DataOps/blob/main/final_task/.assets/4.jpg)
 ![final_task](https://github.com/MaxKots/HSE_DataOps/blob/main/final_task/.assets/10.jpg)
 
 ### Этап 4. JupyterHub
-- Создан Dockerfile на базе \`python:3.14-slim\`
-- Установлены \`jupyterhub\`, \`jupyterlab\`, \`configurable-http-proxy\`
-- Создан \`jupyterhub_config.py\` с настройками аутентификации
+- Создан Dockerfile на базе python:3.14-slim
+- Установлены jupyterhub, jupyterlab, configurable-http-proxy
+- Создан jupyterhub_config.py с настройками аутентификации
 - JupyterHub доступен: http://localhost:8888 (admin/admin)
 
 ![final_task](https://github.com/MaxKots/HSE_DataOps/blob/main/final_task/.assets/5.jpg)
 
 ### Этап 5. ML-сервис
 - Создан FastAPI сервис с эндпоинтами:
-  - \`GET /healthz\` — проверка здоровья
-  - \`GET /readyz\` — готовность
-  - \`POST /api/v1/predict\` — предсказание
-  - \`GET /metrics\` — метрики для Prometheus
+  - GET /healthz — проверка здоровья
+  - GET /readyz — готовность
+  - POST /api/v1/predict — предсказание
+  - GET /metrics — метрики для Prometheus
 - Сервис подключен к PostgreSQL для логирования
 - Доступен: http://localhost:8001
 - Пример запроса:
-  \`\`\`bash
+  \`\`bash
   curl -X POST http://localhost:8001/api/v1/predict \\
     -H "Content-Type: application/json" \\
     -d '{"features": [3.5]}'
   # Ответ: {"prediction":7.065,"model_version":"1.0.0"}
 
 ![final_task](https://github.com/MaxKots/HSE_DataOps/blob/main/final_task/.assets/2.jpg)
-![final_task](https://github.com/MaxKots/HSE_DataOps/blob/main/final_task/.assets/6.jpg) \`\`\`
+![final_task](https://github.com/MaxKots/HSE_DataOps/blob/main/final_task/.assets/6.jpg) \`\`
 
 ### Этап 6. Мониторинг (Prometheus + Grafana)
 - Создан docker-compose.yaml для Prometheus и Grafana
@@ -72,23 +72,23 @@
 - Prometheus доступен: http://localhost:9090
 - Grafana доступна: http://localhost:3000 (admin/admin)
 - Создан дашборд с метриками:
-  - \`http_requests_total\`
-  - \`http_request_duration_seconds_bucket\
+  - http_requests_total\
+  - http_request_duration_seconds_bucket\
 
 ![final_task](https://github.com/MaxKots/HSE_DataOps/blob/main/final_task/.assets/7.jpg)
 ![final_task](https://github.com/MaxKots/HSE_DataOps/blob/main/final_task/.assets/8.jpg)
 
 ### Этап 7-8. Kubernetes + Helm
-- Созданы манифесты в \`k8s/\`:
-  - \`deployment.yaml\` — развертывание с probes (startup, readiness, liveness)
-  - \`service.yaml\` — ClusterIP на порту 80
-  - \`ingress.yaml\` — ingress для доступа
-  - \`secret.yaml\` — секрет с DATABASE_URL
-- Создан Helm chart в \`helm/ml-service/\`:
-  - \`Chart.yaml\`, \`values.yaml\`, \`templates/deployment.yaml\`, \`templates/service.yaml\`
-- Возможность менять версию образа и ресурсы через \`values.yaml\`
+- Созданы манифесты в k8s/:
+  - deployment.yaml — развертывание с probes (startup, readiness, liveness)
+  - service.yaml — ClusterIP на порту 80
+  - ingress.yaml — ingress для доступа
+  - secret.yaml — секрет с DATABASE_URL
+- Создан Helm chart в helm/ml-service/:
+  - Chart.yaml, values.yaml, templates/deployment.yaml, templates/service.yaml
+- Возможность менять версию образа и ресурсы через values.yaml
 - Ресурсы развернуты в minikube:
-  \`\`\`bash
+  \`\`bash
   kubectl get pods
   kubectl get svc
   kubectl get ingress
@@ -188,10 +188,10 @@ probes:
 env:
   DATABASE_URL: "postgresql://mlsvc:mlsvc_pass@ml-service-db:5432/mlsvc"
 ```
-  \`\`\`
+  \`\`
 
 ### Этап 9. Prompt Storage MLflow
-- Создан скрипт \`prompts/create_prompts.py\`
+- Создан скрипт prompts/create_prompts.py
 - Созданы три версии промптов:
   - v1: "You are a helpful assistant. Answer: {question}"
   - v2: "You are a data science expert. Answer: {question}"
